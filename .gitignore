@@ -1,0 +1,6 @@
+__pycache__/
+data/images_largescale/
+data/images_classic/
+data/MOS_datasets/
+*.json
+cache/
