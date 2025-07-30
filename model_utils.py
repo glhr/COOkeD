@@ -106,7 +106,7 @@ probes = {
 }
 
 
-def get_classifier_model(id_name, classifier_variant, is_torchvision_ckpt=False, checkpoint_folder="checkpoints/", device='cuda'):
+def get_classifier_model(id_name, classifier_variant, is_torchvision_ckpt=False, checkpoint_folder="checkpoints/classifiers/", device='cuda'):
     checkpoint = classifiers[id_name][classifier_variant]
     assert id_name in DATA_INFO, f"Dataset {id_name} not found in DATA_INFO"
     assert id_name in classifiers, f"Dataset {id_name} not found in classifiers {classifiers}"
@@ -168,7 +168,7 @@ def get_classifier_model(id_name, classifier_variant, is_torchvision_ckpt=False,
 
     return model
 
-def get_probe_model(id_name, clip_variant, checkpoint_folder="checkpoints/",
+def get_probe_model(id_name, clip_variant, checkpoint_folder="checkpoints/probes/",
                     device='cuda'):
     
     checkpoint = probes[id_name][clip_variant]

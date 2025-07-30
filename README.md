@@ -96,7 +96,7 @@ for image_path in image_paths:
 | ID image example | OOD image example |
 |:---:|:---:|
 | <p align="center">Schnauzeer dog</p><img alt="COOkeD diagram" src="illustrations/IMG_0409-768x1176.jpg" width="100" height="100"> | <p align="center">Greenland shark</p><img alt="COOkeD diagram" src="illustrations/greenland_shark.jpg"  width="100" height="100"> |
-| CLIP prediction: Giant Schnauzer (OOD score: 2.01)<br>Probe prediction: Scottish Terrier (OOD score: 4.12)<br>Classifier prediction: Giant Schnauzer (OOD score: 0.54)<br>**---> COOkeD prediction: Giant Schnauzer (OOD score: 2.60)** | CLIP prediction: snoek fish (OOD score: 1.52)<br>Probe prediction: dugong (OOD score: 3.89)<br>Classifier prediction: eel (OOD score: 0.93)<br>**---> COOkeD prediction: eel (OOD score: 2.80)** |
+| CLIP prediction: Giant Schnauzer (OOD score: 2.01)<br>Probe prediction: Scottish Terrier (OOD score: 4.12)<br>Classifier prediction: Giant Schnauzer (OOD score: 0.54)<br>**COOkeD prediction: Giant Schnauzer (OOD score: 2.60)** | CLIP prediction: snoek fish (OOD score: 1.52)<br>Probe prediction: dugong (OOD score: 3.89)<br>Classifier prediction: eel (OOD score: 0.93)<br>**COOkeD prediction: eel (OOD score: 2.80)** |
 
 ## Getting started
 
@@ -141,7 +141,7 @@ If you use our work, please cite our paper:
 ```bibtex
 @InProceedings{cooked_2025,
     author    = {Humblot-Renaux, Galadrielle and Franchi, Gianni and Escalera, Sergio and Moeslund, Thomas B.},
-    title     = {COOkeD: Ensemble-based OOD detection in the era of {CLIP}},
+    title     = {{COOkeD}: Ensemble-based {OOD} detection in the era of {CLIP}},
     booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) Workshops},
     year      = {2025}
 }
