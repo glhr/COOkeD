@@ -5,3 +5,4 @@ pillow==10.2.0
 ooddb @ git+https://github.com/ooddb/OODDB.git@78c4a22c989d00490854a3884df334ff70170764
 open_clip_torch==2.30.0
 numpy==1.26.3
+gdown==5.2.0

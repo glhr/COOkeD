@@ -111,25 +111,92 @@ pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorc
 pip install -r requirements.txt
 ```
 
-### Download pre-trained models
+### Download pre-trained classifiers
 
+For ImageNet1K, we use pre-trained models from TorchVision (downloaded automatically) when you run the demo or eval. For the other ID datasets, we provide trained models:
 (Coming soon)
 
 ### Download the datasets
 
-ID datasets: ImageNet-1K, ImageNet-200, CIFAR100, DTD, PatternNet
+Run the following script to download the ID datasets (ImageNet-1K, ImageNet-200, CIFAR100, DTD, PatternNet) and corresponding OOD datasets automatically:
 
-(Coming soon)
+``python3 data_download.py``
 
-Expected directory structure:
+<details>
+<summary>Expected directory structure:</summary>
 
-```
+```bash
 data/
-├── images_largescale
+├── benchmark_imglist
+│   ├── cifar100
+│   ├── imagenet
+│   ├── imagenet200
+│   └── ooddb
 ├── images_classic
-├── MOS_datasets
-└── benchmark_imglist
+│   ├── cifar10
+│   │   ├── test
+│   │   └── train
+│   ├── cifar100
+│   │   ├── test
+│   │   └── train
+│   ├── mnist
+│   │   ├── test
+│   │   └── train
+│   ├── places365
+│   │   ├── airfield
+│   │   ├── ...
+│   │   └── zen_garden
+│   ├── svhn
+│   │   └── test
+│   ├── texture
+│   │   ├── banded
+│   │   ├── ...
+│   │   └── zigzagged
+│   └── tin
+│       ├── test
+│       ├── train
+│       ├── val
+│       ├── wnids.txt
+│       └── words.txt
+└── images_largescale
+    ├── DTD
+    │   ├── images
+    │   ├── imdb
+    │   └── labels
+    ├── imagenet_1k
+    │   ├── train
+    │   └── val
+    ├── imagenet_c
+    │   ├── brightness
+    │   ├── ...
+    │   └── zoom_blur
+    ├── imagenet_r
+    │   ├── n01443537
+    │   ├── ...
+    │   └── n12267677
+    ├── imagenet_v2
+    │   ├── 0
+    │   ├── ...
+    │   └── 999
+    ├── inaturalist
+    │   ├── images
+    │   └── imglist.txt
+    ├── ninco
+    │   ├── amphiuma_means
+    │   ├── ...
+    │   └── windsor_chair
+    ├── openimage_o
+    │   └── images
+    ├── PatternNet
+    │   ├── images
+    │   └── patternnet_description.pdf
+    └── ssb_hard
+        ├── n00470682
+        ├── ...
+        └── n13033134
 ```
+
+</details>
 
 ## Run experiments
 
@@ -150,3 +217,8 @@ If you use our work, please cite our paper:
 ## ✉️ Contact
 
 If you have have any issues or doubts about the code, please create a Github issue. Otherwise, you can contact me at gegeh@create.aau.dk
+
+## Acknowledgements
+
+The codebase structure and dataset splits for ImageNet and CIFAR100 are based on [OpenOOD](https://github.com/Jingkang50/OpenOOD). We also use data splits from [OODDB](https://ooddb.github.io).
+We use [open_clip](https://github.com/mlfoundations/open_clip) to load pre-trained CLIP models.
