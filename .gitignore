@@ -4,3 +4,6 @@ data/images_classic/
 data/MOS_datasets/
 *.json
 cache/
+checkpoints/classifiers/
+checkpoints/torchvision/
+results/

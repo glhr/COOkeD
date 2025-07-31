@@ -2,9 +2,9 @@ from PIL import Image
 import torch
 from model_utils import get_classifier_model, get_clip_model, get_probe_model
 from data_utils import preprocess_image_for_clip, preprocess_image_for_cls, get_label_to_class_mapping
-
+import glob
 # load trained models
-device = "cuda" # or "cuda" if you have a GPU
+device = "cuda" # or "cpu"
 clip_variant = "ViT-B-16+openai" # or ViT-B-16+openai, ViT-L-14+openai, ViT-H-14+laion2b_s32b_b79k
 classifier = get_classifier_model("imagenet","resnet18-ft", is_torchvision_ckpt=True, device=device)
 probe = get_probe_model("imagenet", clip_variant, device=device)
@@ -21,10 +21,7 @@ with torch.no_grad():
     prompt_features = clip.encode_text(clip_tokenizer(prompts).to(device))
     prompt_features_normed = prompt_features / prompt_features.norm(dim=-1, keepdim=True)
 
-image_paths = [ # example images
-    "illustrations/IMG_0409-768x1176.jpg", # schnautzer dog, ID
-    "illustrations/greenland_shark.jpg" # greenland shark, OOD
-]
+image_paths = glob.glob("illustrations/*") 
 
 ood_scoring = lambda softmax_probs: torch.distributions.Categorical(probs=softmax_probs).entropy().item() # entropy as OOD score
 #ood_scoring = lambda softmax_probs: torch.max(softmax_probs, dim=1).values.item() # maximum softmax probability (MSP) as OOD score

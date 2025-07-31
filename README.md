@@ -7,7 +7,7 @@
   </p>
 
 <p align="center">
-<img alt="COOkeD diagram" src="illustrations/cooked_diagram.png" width="600">
+<img alt="COOkeD diagram" src="cooked_diagram.png" width="600">
 </p>
 
 
@@ -85,10 +85,10 @@ for image_path in image_paths:
     pred = softmax_ensemble.argmax(dim=1)
     ood_score = ood_scoring(softmax_ensemble)
 
-    print("CLIP prediction:", class_mapping[softmax_clip_t100.argmax(dim=1).item()], f"(OOD score: {ood_scoring(softmax_clip_t100):.2f})")
-    print("Probe prediction:", class_mapping[softmax_probe.argmax(dim=1).item()], f"(OOD score: {ood_scoring(softmax_probe):.2f})")
-    print("Classifier prediction:", class_mapping[softmax_classifier.argmax(dim=1).item()], f"(OOD score: {ood_scoring(softmax_classifier):.2f})")
-    print("---> COOkeD prediction:", class_mapping[pred.item()] , f"(OOD score: {ood_score:.2f})")
+    print("CLIP", class_mapping[softmax_clip_t100.argmax(dim=1).item()], f"(OOD score: {ood_scoring(softmax_clip_t100):.2f})")
+    print("Probe", class_mapping[softmax_probe.argmax(dim=1).item()], f"(OOD score: {ood_scoring(softmax_probe):.2f})")
+    print("Classifier", class_mapping[softmax_classifier.argmax(dim=1).item()], f"(OOD score: {ood_scoring(softmax_classifier):.2f})")
+    print("---> COOkeD", class_mapping[pred.item()] , f"(OOD score: {ood_score:.2f})")
     
     print(f"--------------------------------------------------------------------------------------------------------------")
 ```
@@ -97,7 +97,7 @@ for image_path in image_paths:
 | ID image example | OOD image example |
 |:---:|:---:|
 | <p align="center">Schnauzeer dog</p><img src="illustrations/IMG_0409-768x1176.jpg" width="100" height="100"> | <p align="center">Greenland shark</p><img src="illustrations/greenland_shark.jpg"  width="100" height="100"> |
-| CLIP prediction: Giant Schnauzer ✅ (OOD score: 2.01)<br>Probe prediction: Scottish Terrier ❌ (OOD score: 4.12)<br>Classifier prediction: Giant Schnauzer ✅ (OOD score: 0.54)<br>**COOkeD prediction: Giant Schnauzer ✅ (OOD score: 2.60)** | CLIP prediction: snoek fish (OOD score: 1.52 ❌)<br>Probe prediction: dugong (OOD score: 3.89 ❌)<br>Classifier prediction: eel (OOD score: 0.93 ✅)<br>**COOkeD prediction: eel (OOD score: 2.80 ✅)** |
+| <sub>CLIP Giant Schnauzer ✅ (OOD score: 2.01)<br>Probe Scottish Terrier ❌ (OOD score: 4.12)<br>Classifier Giant Schnauzer ✅ (OOD score: 0.54)<br>**COOkeD Giant Schnauzer ✅ (OOD score: 2.60)**</sub> | <sub>CLIP snoek fish (OOD score: 1.52 ❌)<br>Probe dugong (OOD score: 3.89 ❌)<br>Classifier eel (OOD score: 0.93 ✅)<br>**COOkeD eel (OOD score: 2.80 ✅)**</sub> |
 
 ## Getting started
 
