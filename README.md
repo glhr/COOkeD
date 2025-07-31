@@ -1,9 +1,10 @@
-<h2 align="center">[ICCVW'25] <a href="hhttps://arxiv.org/abs/2507.22576">COOkeD: Ensemble-based OOD detection<br/> in the era of zero-shot CLIP&nbsp;<img alt="arXiv" src="https://img.shields.io/badge/arXiv-2402.15509-b31b1b.svg"></a>
+<h2 align="center">[ICCVW'25] <a href="https://arxiv.org/abs/2507.22576">COOkeD: Ensemble-based OOD detection<br/> in the era of zero-shot CLIP </a>
 </h2>
-  <p align="center">
-     Galadrielle Humblot-Renaux, Gianni Franchi, Sergio Escalera, Thomas B. Moeslund<br>
-  </p>
 
+  <p align="center">
+    <img alt="arXiv" src="https://img.shields.io/badge/arXiv-2507.22576-b31b1b.svg"><br/>
+     Galadrielle Humblot-Renaux, Gianni Franchi, Sergio Escalera, Thomas B. Moeslund
+  </p>
 
 <p align="center">
 <img alt="COOkeD diagram" src="illustrations/cooked_diagram.png" width="600">
@@ -95,8 +96,8 @@ for image_path in image_paths:
 
 | ID image example | OOD image example |
 |:---:|:---:|
-| <p align="center">Schnauzeer dog</p><img alt="COOkeD diagram" src="illustrations/IMG_0409-768x1176.jpg" width="100" height="100"> | <p align="center">Greenland shark</p><img alt="COOkeD diagram" src="illustrations/greenland_shark.jpg"  width="100" height="100"> |
-| CLIP prediction: Giant Schnauzer (OOD score: 2.01)<br>Probe prediction: Scottish Terrier (OOD score: 4.12)<br>Classifier prediction: Giant Schnauzer (OOD score: 0.54)<br>**COOkeD prediction: Giant Schnauzer (OOD score: 2.60)** | CLIP prediction: snoek fish (OOD score: 1.52)<br>Probe prediction: dugong (OOD score: 3.89)<br>Classifier prediction: eel (OOD score: 0.93)<br>**COOkeD prediction: eel (OOD score: 2.80)** |
+| <p align="center">Schnauzeer dog</p><img src="illustrations/IMG_0409-768x1176.jpg" width="100" height="100"> | <p align="center">Greenland shark</p><img src="illustrations/greenland_shark.jpg"  width="100" height="100"> |
+| CLIP prediction: Giant Schnauzer ✅ (OOD score: 2.01)<br>Probe prediction: Scottish Terrier ❌ (OOD score: 4.12)<br>Classifier prediction: Giant Schnauzer ✅ (OOD score: 0.54)<br>**COOkeD prediction: Giant Schnauzer ✅ (OOD score: 2.60)** | CLIP prediction: snoek fish (OOD score: 1.52 ❌)<br>Probe prediction: dugong (OOD score: 3.89 ✅)<br>Classifier prediction: eel (OOD score: 0.93 ❌)<br>**COOkeD prediction: eel (OOD score: 2.80 ✅)** |
 
 ## Getting started
 
