@@ -94,7 +94,7 @@ for image_path in image_paths:
 | ID image example | ID image example | OOD image example |
 |:---:|:---:|:---:|
 | <p align="center">Giant Schnauzer</p><img src="illustrations/IMG_0409-768x1176.jpg" width="100" height="100"> | <p align="center">Sock</p><img src="illustrations/ythedc5f1.png" width="100" height="100"> | <p align="center">Greenland shark</p><img src="illustrations/greenland_shark.jpg"  width="100" height="100"> |
-| <sub>CLIP: Giant Schnauzer ✅ (MSP: 0.32)<br>Probe: Scottish Terrier ❌ (MSP: 0.15)<br>Classifier: Giant Schnauzer ✅ (MSP: 0.87)<br>**---> COOkeD: Giant Schnauzer ✅ (MSP: 0.44)**</sub> | CLIP: sock ✅ (MSP: 0.82)<br>Probe: sock ✅ (MSP: 0.05)<br>Classifier: stethoscope ❌ (MSP: 0.65)<br>**---> COOkeD: sock ✅ (MSP: 0.29)** | <sub>CLIP: snoek fish (MSP: 0.54 ❌)<br>Probe: dugong (MSP: 0.27 ❌)<br>Classifier: eel (MSP: 0.74 ❌)<br>**---> COOkeD: eel (MSP: 0.27 ✅)**</sub>
+| <sub>CLIP: Giant Schnauzer ✅ (MSP: 0.32)<br>Probe: Scottish Terrier ❌ (MSP: 0.15)<br>Classifier: Giant Schnauzer ✅ (MSP: 0.87)<br>**---> COOkeD: Giant Schnauzer ✅ (MSP: 0.44)**</sub> | <sub>CLIP: sock ✅ (MSP: 0.82)<br>Probe: sock ✅ (MSP: 0.05)<br>Classifier: stethoscope ❌ (MSP: 0.65)<br>**---> COOkeD: sock ✅ (MSP: 0.29)**</sub> | <sub>CLIP: snoek fish (MSP: 0.54 ❌)<br>Probe: dugong (MSP: 0.27 ❌)<br>Classifier: eel (MSP: 0.74 ❌)<br>**---> COOkeD: eel (MSP: 0.27 ✅)**</sub>
 
 ## Getting started
 
