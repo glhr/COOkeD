@@ -32,7 +32,7 @@ from model_utils import get_classifier_model, get_clip_model, get_probe_model
 from data_utils import preprocess_for_clip, preprocess_for_cls, get_label_to_class_mapping
 
 # load trained models
-device = "cuda" # or "cuda" if you have a GPU
+device = "cuda" # or "cpu"
 clip_variant = "ViT-B-16+openai" # or ViT-B-16+openai, ViT-L-14+openai, ViT-H-14+laion2b_s32b_b79k
 classifier = get_classifier_model("imagenet","resnet18-ft", is_torchvision_ckpt=True, device=device)
 probe = get_probe_model("imagenet", clip_variant, device=device)
@@ -97,7 +97,7 @@ for image_path in image_paths:
 | ID image example | OOD image example |
 |:---:|:---:|
 | <p align="center">Schnauzeer dog</p><img src="illustrations/IMG_0409-768x1176.jpg" width="100" height="100"> | <p align="center">Greenland shark</p><img src="illustrations/greenland_shark.jpg"  width="100" height="100"> |
-| CLIP prediction: Giant Schnauzer ✅ (OOD score: 2.01)<br>Probe prediction: Scottish Terrier ❌ (OOD score: 4.12)<br>Classifier prediction: Giant Schnauzer ✅ (OOD score: 0.54)<br>**COOkeD prediction: Giant Schnauzer ✅ (OOD score: 2.60)** | CLIP prediction: snoek fish (OOD score: 1.52 ❌)<br>Probe prediction: dugong (OOD score: 3.89 ✅)<br>Classifier prediction: eel (OOD score: 0.93 ❌)<br>**COOkeD prediction: eel (OOD score: 2.80 ✅)** |
+| CLIP prediction: Giant Schnauzer ✅ (OOD score: 2.01)<br>Probe prediction: Scottish Terrier ❌ (OOD score: 4.12)<br>Classifier prediction: Giant Schnauzer ✅ (OOD score: 0.54)<br>**COOkeD prediction: Giant Schnauzer ✅ (OOD score: 2.60)** | CLIP prediction: snoek fish (OOD score: 1.52 ❌)<br>Probe prediction: dugong (OOD score: 3.89 ❌)<br>Classifier prediction: eel (OOD score: 0.93 ✅)<br>**COOkeD prediction: eel (OOD score: 2.80 ✅)** |
 
 ## Getting started
 
