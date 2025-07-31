@@ -3,6 +3,8 @@ import torch.nn.functional as F
 import torch
 import glob
 
+from huggingface_hub import snapshot_download
+
 from openood.networks.resnet18_32x32 import ResNet18_32x32
 from openood.networks.resnet18_224x224 import ResNet18_224x224
 from openood.networks.resnet50 import ResNet50
@@ -13,7 +15,6 @@ from data_utils import DATA_INFO
 clip_architecture_to_dim = {
         'ViT-B-32': 512,
         'ViT-B-16': 512,
-        'ViT-H-14-quickgelu': 1024,
         'ViT-H-14': 1024,
         'ViT-L-14': 768,
     }
@@ -112,6 +113,7 @@ def get_classifier_model(id_name, classifier_variant, is_torchvision_ckpt=False,
     assert id_name in classifiers, f"Dataset {id_name} not found in classifiers {classifiers}"
     assert classifier_variant in classifiers[id_name], f"Classifier variant {classifier_variant} not found in DATA_INFO for {id_name}"
     if is_torchvision_ckpt:
+        checkpoint_folder = checkpoint_folder.replace("classifiers", "torchvision")
         checkpoint_path = f"{checkpoint_folder}/{checkpoint}"
         
         # if it doesn't exist, download it from https://download.pytorch.org/models/{checkpoint}
@@ -136,7 +138,7 @@ def get_classifier_model(id_name, classifier_variant, is_torchvision_ckpt=False,
             backbone_type = "vit"
         else:
             raise NotImplementedError
-        backbone.load_state_dict(torch.load(checkpoint_path, map_location='cpu'), strict=True)
+        backbone.load_state_dict(torch.load(checkpoint_path, map_location='cpu', weights_only=True), strict=True)
 
         model = COOkeDNet(backbone=backbone, num_classes=num_classes, aux_dim=None, backbone_type=backbone_type, replace_fc=False).to(device)
     else:
@@ -145,9 +147,11 @@ def get_classifier_model(id_name, classifier_variant, is_torchvision_ckpt=False,
         assert id_name in DATA_INFO, f"Dataset {id_name} not found in DATA_INFO"
         assert id_name in checkpoint, f"Dataset {id_name} not found in checkpoint {checkpoint}"
         num_classes = DATA_INFO[id_name]['num_classes']
+        
+        snapshot_download(repo_id="glhr/COOkeD-checkpoints", repo_type="model", local_dir=checkpoint_folder, allow_patterns=f"{checkpoint}*")
 
         checkpoint = get_checkpoint_path(checkpoint, checkpoint_folder)
-
+        
         if "resnet18_224x224" in checkpoint:
             backbone = ResNet18_224x224(num_classes=num_classes)
             backbone_type = "resnet"
@@ -164,7 +168,7 @@ def get_classifier_model(id_name, classifier_variant, is_torchvision_ckpt=False,
             raise NotImplementedError
         
         model = COOkeDNet(backbone=backbone, num_classes=num_classes, aux_dim=None, backbone_type=backbone_type).to(device)
-        model.load_state_dict(torch.load(checkpoint, map_location='cpu'), strict=True)
+        model.load_state_dict(torch.load(checkpoint, map_location='cpu', weights_only=True), strict=True)
 
     return model
 
@@ -184,7 +188,7 @@ def get_probe_model(id_name, clip_variant, checkpoint_folder="checkpoints/probes
 
     clip_feat_dim = clip_architecture_to_dim[clip_arch]
     model = COOkeDNet(backbone=None, num_classes=num_classes, aux_dim=None, backbone_type="none", feature_size=clip_feat_dim).to(device)
-    model.load_state_dict(torch.load(checkpoint, map_location='cpu'), strict=True)
+    model.load_state_dict(torch.load(checkpoint, map_location='cpu', weights_only=True), strict=True)
 
     return model
 

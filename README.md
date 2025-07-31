@@ -1,14 +1,14 @@
-<h2 align="center">[ICCVW'25] COOkeD: Ensemble-based OOD detection<br/> in the era of zero-shot CLIP</a></h2>
+<h2 align="center">[ICCVW'25] <a href="hhttps://arxiv.org/abs/2507.22576">COOkeD: Ensemble-based OOD detection<br/> in the era of zero-shot CLIP&nbsp;<img alt="arXiv" src="https://img.shields.io/badge/arXiv-2402.15509-b31b1b.svg"></a>
+</h2>
+  <p align="center">
+     Galadrielle Humblot-Renaux, Gianni Franchi, Sergio Escalera, Thomas B. Moeslund<br>
+  </p>
 
-  <!-- <p align="center">
-    <a href="https://arxiv.org/abs/??"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-2402.15509-b31b1b.svg"></a> 
-  </p> -->
-
-<br>
 
 <p align="center">
 <img alt="COOkeD diagram" src="illustrations/cooked_diagram.png" width="600">
 </p>
+
 
 ## 🔎 About
 
@@ -110,12 +110,6 @@ conda activate cooked
 pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cu121
 pip install -r requirements.txt
 ```
-
-### Download pre-trained classifiers
-
-For ImageNet1K, we use pre-trained models from TorchVision (downloaded automatically) when you run the demo or eval. For the other ID datasets, we provide trained models:
-(Coming soon)
-
 ### Download the datasets
 
 Run the following script to download the ID datasets (ImageNet-1K, ImageNet-200, CIFAR100, DTD, PatternNet) and corresponding OOD datasets automatically:
@@ -198,9 +192,27 @@ data/
 
 </details>
 
+### Download pre-trained classifiers
+
+Classifier checkpoints will be downloaded automatically when you run the demo or eval scripts. For ImageNet1K, we use pre-trained classifiers from TorchVision (will be downloaded to ``checkpoints/torchvision``), and for the other ID datasets we share our own trained classifiers at https://huggingface.co/glhr/COOkeD-checkpoints (will be downloaded to ``checkpoints/classifiers``).
+
+
+
 ## Run experiments
 
-(Coming soon)
+The script ``eval.py`` evaluates COOkeD in terms of classification accuracy and OOD detection for a given ID dataset, classifier architecture and CLIP variant. Running the following should give you the same results as Table 3 in the paper:
+```bash
+classifier=resnet18-ft # or resnet50-ft
+clip_variant=ViT-B-16+openai # or ViT-L-14+openai
+python eval.py --id_name imagenet --classifier $classifier --clip_variant $clip_variant # standard evaluation on ImageNet-1K
+python eval.py --id_name imagenet --classifier $classifier --clip_variant $clip_variant --csid # test-time covariate shift
+
+python eval.py --id_name cifar100n_noisyfine --classifier $classifier --clip_variant $clip_variant # training-time label noise
+python eval.py --id_name ooddb_dtd_0 --classifier $classifier --clip_variant $clip_variant # zero-shot shift (texture images as ID dataset)
+```
+
+Full results with both MSP and entropy as OOD score are saved as CSVs to the ``results`` directory. 
+
 
 ## 📚 Citation
 If you use our work, please cite our paper:

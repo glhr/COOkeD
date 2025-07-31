@@ -16,30 +16,50 @@ import torchvision.transforms as tvs_trans
 
 from openood.preprocessors.transform import normalization_dict, Convert, interpolation_modes
 
+CLIP_NORM_PARAMS = [[0.48145466, 0.4578275, 0.40821073], [0.26862954, 0.26130258, 0.27577711]]
 
+def get_img_normalizer(setting):
+    if setting in normalization_dict.keys():
+        norm_mean = normalization_dict[setting][0]
+        norm_std = normalization_dict[setting][1]
+    elif setting == "clip":
+        norm_mean = CLIP_NORM_PARAMS[0]
+        norm_std = CLIP_NORM_PARAMS[1]
+    else:
+        norm_mean = [0.5, 0.5, 0.5]
+        norm_std = [0.5, 0.5, 0.5]
+    return tvs_trans.Normalize(mean=norm_mean, std=norm_std)
 
+def get_preprocessor(crop_mode="centercrop", image_size=224, norm_params=None):
+    if crop_mode == "resize":
+        tf_list = [
+            Convert('RGB'),
+            tvs_trans.Resize((image_size,image_size),
+                                interpolation=interpolation_modes["bilinear"]),
+            tvs_trans.ToTensor()
+        ]
+        
+    elif crop_mode == "centercrop":
+        tf_list = [
+            Convert('RGB'),
+            tvs_trans.Resize(image_size,
+                                interpolation=interpolation_modes["bilinear"]),
+            #tvs_trans.RandomCrop(image_size, padding=4),
+            tvs_trans.CenterCrop(image_size),
+            tvs_trans.ToTensor()
+        ]
+    if norm_params is not None:
+        tf_list.append(tvs_trans.Normalize(mean=norm_params[0], std=norm_params[1]))
+    return tvs_trans.Compose(tf_list)
+        
 def preprocess_image_for_clip(image, size=224):
-    norm_params = [[0.48145466, 0.4578275, 0.40821073], [0.26862954, 0.26130258, 0.27577711]]
-    tf = tvs_trans.Compose([
-        tvs_trans.Resize((size,size),
-                            interpolation=interpolation_modes["bilinear"]),
-        #tvs_trans.RandomCrop(image_size, padding=4),
-        #tvs_trans.CenterCrop(size),
-        tvs_trans.ToTensor(),
-        tvs_trans.Normalize(norm_params[0], norm_params[1]),
-    ])
+    norm_params = CLIP_NORM_PARAMS
+    tf = get_preprocessor(crop_mode="resize", image_size=size, norm_params=norm_params)
     return tf(image).unsqueeze(0)  # add batch dimension
 
-def preprocess_image_for_cls(image, size=224):
-    norm_params = normalization_dict['imagenet']
-    tf = tvs_trans.Compose([
-        tvs_trans.Resize((size,size),
-                            interpolation=interpolation_modes["bilinear"]),
-        #tvs_trans.RandomCrop(image_size, padding=4),
-        #tvs_trans.CenterCrop(size),
-        tvs_trans.ToTensor(),
-        tvs_trans.Normalize(norm_params[0], norm_params[1]),
-    ])
+def preprocess_image_for_cls(image, size=224, id_name='imagenet'):
+    norm_params = normalization_dict[id_name]
+    tf = get_preprocessor(crop_mode="resize", image_size=size, norm_params=norm_params)
     return tf(image).unsqueeze(0)  # add batch dimension
 
 
