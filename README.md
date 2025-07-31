@@ -29,8 +29,8 @@ We evaluate COOkeD on popular CIFAR100 and ImageNet benchmarks, but also conside
 from PIL import Image
 import torch
 from model_utils import get_classifier_model, get_clip_model, get_probe_model
-from data_utils import preprocess_for_clip, preprocess_for_cls, get_label_to_class_mapping
-
+from data_utils import preprocess_image_for_clip, preprocess_image_for_cls, get_label_to_class_mapping
+import glob
 # load trained models
 device = "cuda" # or "cpu"
 clip_variant = "ViT-B-16+openai" # or ViT-B-16+openai, ViT-L-14+openai, ViT-H-14+laion2b_s32b_b79k
@@ -49,21 +49,18 @@ with torch.no_grad():
     prompt_features = clip.encode_text(clip_tokenizer(prompts).to(device))
     prompt_features_normed = prompt_features / prompt_features.norm(dim=-1, keepdim=True)
 
-image_paths = [ # example images
-    "illustrations/IMG_0409-768x1176.jpg", # schnautzer dog, ID
-    "illustrations/greenland_shark.jpg" # greenland shark, OOD
-]
+image_paths = glob.glob("illustrations/*") 
 
 ood_scoring = lambda softmax_probs: torch.distributions.Categorical(probs=softmax_probs).entropy().item() # entropy as OOD score
-#ood_scoring = lambda softmax_probs: torch.max(softmax_probs, dim=1).values.item() # maximum softmax probability (MSP) as OOD score
+ood_scoring = lambda softmax_probs: torch.max(softmax_probs, dim=1).values.item() # maximum softmax probability (MSP) as OOD score
 
 for image_path in image_paths:
     print(f"---------------{image_path}-------------------")
     image = Image.open(image_path).convert("RGB")
 
     # note: different normalization for CLIP image encoder vs. standard classifier
-    image_normalized_clip = preprocess_for_clip(image).to(device)
-    image_normalized_cls = preprocess_for_cls(image).to(device)
+    image_normalized_clip = preprocess_image_for_clip(image).to(device)
+    image_normalized_cls = preprocess_image_for_cls(image).to(device)
 
     with torch.no_grad():
         # 1. get zero-shot CLIP prediction
@@ -85,19 +82,19 @@ for image_path in image_paths:
     pred = softmax_ensemble.argmax(dim=1)
     ood_score = ood_scoring(softmax_ensemble)
 
-    print("CLIP", class_mapping[softmax_clip_t100.argmax(dim=1).item()], f"(OOD score: {ood_scoring(softmax_clip_t100):.2f})")
-    print("Probe", class_mapping[softmax_probe.argmax(dim=1).item()], f"(OOD score: {ood_scoring(softmax_probe):.2f})")
-    print("Classifier", class_mapping[softmax_classifier.argmax(dim=1).item()], f"(OOD score: {ood_scoring(softmax_classifier):.2f})")
-    print("---> COOkeD", class_mapping[pred.item()] , f"(OOD score: {ood_score:.2f})")
+    print("CLIP:", class_mapping[softmax_clip_t100.argmax(dim=1).item()], f"(MSP: {ood_scoring(softmax_clip_t100):.2f})")
+    print("Probe:", class_mapping[softmax_probe.argmax(dim=1).item()], f"(MSP: {ood_scoring(softmax_probe):.2f})")
+    print("Classifier:", class_mapping[softmax_classifier.argmax(dim=1).item()], f"(MSP: {ood_scoring(softmax_classifier):.2f})")
+    print("---> COOkeD:", class_mapping[pred.item()] , f"(MSP: {ood_score:.2f})")
     
     print(f"--------------------------------------------------------------------------------------------------------------")
 ```
 </details>
 
-| ID image example | OOD image example |
-|:---:|:---:|
-| <p align="center">Schnauzeer dog</p><img src="illustrations/IMG_0409-768x1176.jpg" width="100" height="100"> | <p align="center">Greenland shark</p><img src="illustrations/greenland_shark.jpg"  width="100" height="100"> |
-| <sub>CLIP Giant Schnauzer ✅ (OOD score: 2.01)<br>Probe Scottish Terrier ❌ (OOD score: 4.12)<br>Classifier Giant Schnauzer ✅ (OOD score: 0.54)<br>**COOkeD Giant Schnauzer ✅ (OOD score: 2.60)**</sub> | <sub>CLIP snoek fish (OOD score: 1.52 ❌)<br>Probe dugong (OOD score: 3.89 ❌)<br>Classifier eel (OOD score: 0.93 ✅)<br>**COOkeD eel (OOD score: 2.80 ✅)**</sub> |
+| ID image example | ID image example | OOD image example |
+|:---:|:---:|:---:|
+| <p align="center">Giant Schnauzer</p><img src="illustrations/IMG_0409-768x1176.jpg" width="100" height="100"> | <p align="center">Sock</p><img src="illustrations/ythedc5f1.png" width="100" height="100"> | <p align="center">Greenland shark</p><img src="illustrations/greenland_shark.jpg"  width="100" height="100"> |
+| <sub>CLIP: Giant Schnauzer ✅ (MSP: 0.32)<br>Probe: Scottish Terrier ❌ (MSP: 0.15)<br>Classifier: Giant Schnauzer ✅ (MSP: 0.87)<br>**---> COOkeD: Giant Schnauzer ✅ (MSP: 0.44)**</sub> | CLIP: sock ✅ (MSP: 0.82)<br>Probe: sock ✅ (MSP: 0.05)<br>Classifier: stethoscope ❌ (MSP: 0.65)<br>**---> COOkeD: sock ✅ (MSP: 0.29)** | <sub>CLIP: snoek fish (MSP: 0.54 ❌)<br>Probe: dugong (MSP: 0.27 ❌)<br>Classifier: eel (MSP: 0.74 ❌)<br>**---> COOkeD: eel (MSP: 0.27 ✅)**</sub>
 
 ## Getting started
 

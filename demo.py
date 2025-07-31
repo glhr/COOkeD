@@ -24,7 +24,7 @@ with torch.no_grad():
 image_paths = glob.glob("illustrations/*") 
 
 ood_scoring = lambda softmax_probs: torch.distributions.Categorical(probs=softmax_probs).entropy().item() # entropy as OOD score
-#ood_scoring = lambda softmax_probs: torch.max(softmax_probs, dim=1).values.item() # maximum softmax probability (MSP) as OOD score
+ood_scoring = lambda softmax_probs: torch.max(softmax_probs, dim=1).values.item() # maximum softmax probability (MSP) as OOD score
 
 for image_path in image_paths:
     print(f"---------------{image_path}-------------------")
@@ -54,9 +54,9 @@ for image_path in image_paths:
     pred = softmax_ensemble.argmax(dim=1)
     ood_score = ood_scoring(softmax_ensemble)
 
-    print("CLIP prediction:", class_mapping[softmax_clip_t100.argmax(dim=1).item()], f"(OOD score: {ood_scoring(softmax_clip_t100):.2f})")
-    print("Probe prediction:", class_mapping[softmax_probe.argmax(dim=1).item()], f"(OOD score: {ood_scoring(softmax_probe):.2f})")
-    print("Classifier prediction:", class_mapping[softmax_classifier.argmax(dim=1).item()], f"(OOD score: {ood_scoring(softmax_classifier):.2f})")
-    print("---> COOkeD prediction:", class_mapping[pred.item()] , f"(OOD score: {ood_score:.2f})")
+    print("CLIP:", class_mapping[softmax_clip_t100.argmax(dim=1).item()], f"(MSP: {ood_scoring(softmax_clip_t100):.2f})")
+    print("Probe:", class_mapping[softmax_probe.argmax(dim=1).item()], f"(MSP: {ood_scoring(softmax_probe):.2f})")
+    print("Classifier:", class_mapping[softmax_classifier.argmax(dim=1).item()], f"(MSP: {ood_scoring(softmax_classifier):.2f})")
+    print("---> COOkeD:", class_mapping[pred.item()] , f"(MSP: {ood_score:.2f})")
     
     print(f"--------------------------------------------------------------------------------------------------------------")
